@@ -1,0 +1,16 @@
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+body,
+input {
+    text-align: center;
+}
+
+input {
+    font-size: large;
+}
+
+.hide {
+    display: none;
+}
