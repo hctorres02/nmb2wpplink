@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>nmb2wpplink</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nmb2wpplink</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.css">
+    <link rel="stylesheet" href="style.css">
+</head>
 
-    <body>
-        <h1>nmb2wpplink</h1>
-        <form id="form">
-            <input type="text" id="input" placeholder="Telephone" autofocus>
-            <input type="submit">
-        </form>
-        <p id="output"></p>
-        <script src="script.js"></script>
-    </body>
+<body>
+    <div class="hero is-fullheight">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">nmb2wpplink</h1>
+                <h2 class="subtitle">&mdash; pass a text string to WhatsApp short link</h2>
+                <form id="form">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input id="input" type="text" class="input is-large" maxlength="12"
+                                placeholder="Type or paste">
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-link is-large">
+                                message
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="output_container" class="container is-hidden">
+        <p id="output" />
+    </div>
+    <script src="script.js"></script>
+</body>
 
 </html>

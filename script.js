@@ -1,26 +1,34 @@
-// enter a new number
-input.addEventListener('focus', () => {
-    output.classList.add('hide')
-})
+/**
+ * author: HCTorres02
+ * site: https://github.com/hctorres02
+ * description:
+ * 
+ * v0.2
+ */
 
-// submit event
-form.addEventListener('submit', (e) => {
+const _sanitizeInput = e => e.target.value = e.target.value.replace(/\D/g, '')
+const _hideOutput = () => output_container.classList.add('is-hidden')
+const _showOutput = () => output_container.classList.remove('is-hidden')
 
-    // don't refresh page
+const _preventDefault = e => {
     e.preventDefault()
+    input.focus()
+}
 
-    // clear input focus
-    input.blur()
+const _createLink = e => {
+    _preventDefault(e)
 
-    // vars
-    let allowed_lenghts = [12, 13]
-    let telephone = input.value.replace(/\D/g, '')
+    let allowedLenghts = [11, 12]
+    let telephone = input.value
+    let isAllowed = allowedLenghts.includes(telephone.length)
 
-    // output message
-    output.innerHTML = allowed_lenghts.includes(telephone.length)
-        ? `<a href="https://wa.me/${telephone}">message +${telephone}</a>`
-        : `<strong>+${input.value}</strong> isn't a valid number`
+    output.innerHTML = isAllowed
+        ? `<a href="https://wa.me/${telephone}" class="is-link">Message +${telephone}</a>`
+        : `<strong>${telephone}</strong> isn't a valid number`
 
-    // show output
-    output.classList.remove('hide')
-})
+    _showOutput()
+}
+
+input.addEventListener('focus', _hideOutput)
+input.addEventListener('keyup', _sanitizeInput)
+form.addEventListener('submit', _createLink)
