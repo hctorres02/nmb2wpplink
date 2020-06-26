@@ -32,5 +32,5 @@ input.addEventListener('focus', hideOutput)
 form.addEventListener('submit', createLink)
 
 // multiple events, same element
-'focus,blur'.split(',').forEach(t =>
+'keyup,blur'.split(',').forEach(t =>
     input.addEventListener(t, sanitizeInput))
