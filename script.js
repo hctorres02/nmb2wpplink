@@ -1,34 +1,36 @@
-/**
- * author: HCTorres02
- * site: https://github.com/hctorres02
- * description:
- * 
- * v0.2
- */
+const configs = {
+    allowedLengths: [11, 12]
+}
 
-const _sanitizeInput = e => e.target.value = e.target.value.replace(/\D/g, '')
-const _hideOutput = () => output_container.classList.add('is-hidden')
-const _showOutput = () => output_container.classList.remove('is-hidden')
+const isValid = t =>
+    configs.allowedLengths.includes(t.length)
 
-const _preventDefault = e => {
+const sanitizeInput = e =>
+    e.target.value = e.target.value.replace(/\D/g, '')
+
+const hideOutput = () =>
+    output.classList.add('is-hidden')
+
+const showOutput = t => {
+    output.classList.remove('is-hidden')
+    output.innerHTML = isValid(t)
+        ? `<a href="https://wa.me/${t}" class="is-link">Message +${t}</a>`
+        : `<strong>${t}</strong> isn't a valid number`
+}
+
+const preventDefault = e => {
     e.preventDefault()
     input.focus()
 }
 
-const _createLink = e => {
-    _preventDefault(e)
-
-    let allowedLenghts = [11, 12]
-    let telephone = input.value
-    let isAllowed = allowedLenghts.includes(telephone.length)
-
-    output.innerHTML = isAllowed
-        ? `<a href="https://wa.me/${telephone}" class="is-link">Message +${telephone}</a>`
-        : `<strong>${telephone}</strong> isn't a valid number`
-
-    _showOutput()
+const createLink = e => {
+    preventDefault(e)
+    showOutput(input.value)
 }
 
-input.addEventListener('focus', _hideOutput)
-input.addEventListener('keyup', _sanitizeInput)
-form.addEventListener('submit', _createLink)
+input.addEventListener('focus', hideOutput)
+form.addEventListener('submit', createLink)
+
+// multiple events, same element
+'focus,blur'.split(',').forEach(t =>
+    input.addEventListener(t, sanitizeInput))
