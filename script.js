@@ -47,8 +47,8 @@ const pasteData = async e => {
         await navigator.clipboard
             .readText()
             .then(d => sanitizeInput(d))
-    } catch (e) { /* silence is golden! */ }
-    finally { input.focus() }
+    } catch (e) { /* silence is golden! */
+    } finally { input.focus() }
 }
 
 const readContact = async e => {
@@ -58,8 +58,8 @@ const readContact = async e => {
         await navigator.contacts
             .select(configs.props, configs.options)
             .then(c => sanitizeInput(c[0].tel))
-    } catch (e) { /* silence is golden! */ }
-    finally { input.focus() }
+    } catch (e) { /* silence is golden! */
+    } finally { input.focus() }
 }
 
 // --- EVENTS LISTENERS
