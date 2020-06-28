@@ -1,12 +1,30 @@
+// --- APP CONFIGS
 const configs = {
-    allowedLengths: [11, 12]
+    allowedLengths: [11, 12],
+    props: ['name', 'tel'],
+    options: {
+        multiple: false
+    }
 }
+
+// --- SCOPE
+var form = document.querySelector('#form'),
+    input = document.querySelector('#input'),
+    clipboard = document.querySelector('#clipboard'),
+    contact_container = document.querySelector('#contact_containe'),
+    contact = document.querySelector('#contact')
+
+// --- METHODS
+const maxAllowedLength = () =>
+    configs.allowedLengths[configs.allowedLengths.length - 1]
 
 const isValid = t =>
     configs.allowedLengths.includes(t.length)
 
 const sanitizeInput = e =>
-    e.target.value = e.target.value.replace(/\D/g, '')
+    input.value = (e.target == undefined ? e : e.target.value)
+        .replace(/\D/g, '')
+        .substr(0, maxAllowedLength())
 
 const hideOutput = () =>
     output.classList.add('is-hidden')
@@ -26,18 +44,33 @@ const createLink = e => {
 const pasteData = async e => {
     try {
         e.preventDefault()
-        await navigator.clipboard.readText()
-            .then(d => input.value = d)
-    }
-    catch (e) { /* silence is golden! */ }
+        await navigator.clipboard
+            .readText()
+            .then(d => sanitizeInput(d))
+    } catch (e) { /* silence is golden! */ }
     finally { input.focus() }
 }
 
-// single events
-input.addEventListener('focus', hideOutput)
-form.addEventListener('submit', createLink)
-clipboard.addEventListener('click', pasteData)
+const readContact = async e => {
+    e.preventDefault()
 
-// multiple events, same element
-'keyup,blur'.split(',').forEach(t =>
-    input.addEventListener(t, sanitizeInput))
+    try {
+        await navigator.contacts
+            .select(configs.props, configs.options)
+            .then(c => sanitizeInput(c[0].tel))
+    } catch (e) { /* silence is golden! */ }
+    finally { input.focus() }
+}
+
+// --- EVENTS LISTENERS
+form.addEventListener('submit', createLink)
+input.addEventListener('focus', hideOutput)
+input.addEventListener('input', sanitizeInput)
+clipboard.addEventListener('click', pasteData)
+contact.addEventListener('click', readContact)
+
+// --- BUSINNES RULES
+input.maxLength = maxAllowedLength()
+
+if ('contacts' in navigator && 'ContactsManager' in window)
+    contact_container.classList.remove('is-hidden')
