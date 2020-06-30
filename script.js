@@ -55,9 +55,9 @@ const readContact = async e => {
     e.preventDefault()
 
     try {
-        await navigator.contacts
-            .select(config.props, config.options)
-            .forEach(c => sanitizeInput(c))
+        (await navigator.contacts
+            .select(config.props, config.options))
+            .forEach(c => sanitizeInput(c.tel))
     } catch (e) { /* silence is golden! */
     } finally { input.focus() }
 }
