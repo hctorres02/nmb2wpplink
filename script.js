@@ -11,7 +11,7 @@ const configs = {
 var form = document.querySelector('#form'),
     input = document.querySelector('#input'),
     clipboard = document.querySelector('#clipboard'),
-    contact_container = document.querySelector('#contact_containe'),
+    contact_container = document.querySelector('#contact_container'),
     contact = document.querySelector('#contact')
 
 // --- METHODS
@@ -69,8 +69,8 @@ input.addEventListener('input', sanitizeInput)
 clipboard.addEventListener('click', pasteData)
 contact.addEventListener('click', readContact)
 
-// --- BUSINNES RULES
+// --- BUSINESS RULES
 input.maxLength = maxAllowedLength()
 
-if ('contacts' in navigator && 'ContactsManager' in window)
+if (window.ContactManager && navigator.contacts)
     contact_container.classList.remove('is-hidden')
