@@ -72,5 +72,5 @@ contact.addEventListener('click', readContact)
 // --- BUSINESS RULES
 input.maxLength = maxAllowedLength()
 
-if (window.ContactManager && navigator.contacts)
+if (window.ContactManager)
     contact_container.classList.remove('is-hidden')
