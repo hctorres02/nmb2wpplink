@@ -1,5 +1,5 @@
 // --- APP CONFIGS
-const configs = {
+const config = {
     allowedLengths: [11, 12],
     props: ['name', 'tel'],
     options: {
@@ -16,10 +16,10 @@ var form = document.querySelector('#form'),
 
 // --- METHODS
 const maxAllowedLength = () =>
-    configs.allowedLengths[configs.allowedLengths.length - 1]
+    config.allowedLengths[config.allowedLengths.length - 1]
 
 const isValid = t =>
-    configs.allowedLengths.includes(t.length)
+    config.allowedLengths.includes(t.length)
 
 const sanitizeInput = e =>
     input.value = (e.target == undefined ? e : e.target.value)
@@ -56,8 +56,8 @@ const readContact = async e => {
 
     try {
         await navigator.contacts
-            .select(configs.props, configs.options)
-            .then(c => sanitizeInput(c[0].tel))
+            .select(config.props, config.options)
+            .forEach(c => sanitizeInput(c))
     } catch (e) { /* silence is golden! */
     } finally { input.focus() }
 }
