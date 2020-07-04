@@ -1,28 +1,22 @@
 // --- APP CONFIGS
-const config = {
-    allowedLengths: [11, 12],
-    props: ['name', 'tel'],
-    options: {
-        multiple: false
-    }
+const rules = {
+    allowedLengths: [12, 13]
 }
 
 // --- SCOPE
 var form = document.querySelector('#form'),
     input = document.querySelector('#input'),
-    clipboard = document.querySelector('#clipboard'),
-    contact_container = document.querySelector('#contact_container'),
-    contact = document.querySelector('#contact')
+    clipboard = document.querySelector('#clipboard')
 
 // --- METHODS
 const maxAllowedLength = () =>
-    config.allowedLengths[config.allowedLengths.length - 1]
+    rules.allowedLengths[rules.allowedLengths.length - 1]
 
-const isValid = t =>
-    config.allowedLengths.includes(t.length)
+const hasAllowedLength = t =>
+    rules.allowedLengths.includes(t.length)
 
 const sanitizeInput = e =>
-    input.value = (e.target == undefined ? e : e.target.value)
+    input.value = (e.target != undefined ? e.target.value : e)
         .replace(/\D/g, '')
         .substr(0, maxAllowedLength())
 
@@ -31,7 +25,7 @@ const hideOutput = () =>
 
 const showOutput = t => {
     output.classList.remove('is-hidden')
-    output.innerHTML = isValid(t)
+    output.innerHTML = hasValidLength(t)
         ? `<a href="https://wa.me/${t}" class="is-link">Message +${t}</a>`
         : `<strong>${t}</strong> isn't a valid number`
 }
@@ -47,19 +41,11 @@ const pasteData = async e => {
         await navigator.clipboard
             .readText()
             .then(d => sanitizeInput(d))
-    } catch (e) { /* silence is golden! */
-    } finally { input.focus() }
-}
-
-const readContact = async e => {
-    e.preventDefault()
-
-    try {
-        (await navigator.contacts
-            .select(config.props, config.options))
-            .forEach(c => sanitizeInput(c.tel))
-    } catch (e) { /* silence is golden! */
-    } finally { input.focus() }
+    } catch (e) {
+        console.log(e)
+    } finally {
+        input.focus()
+    }
 }
 
 // --- EVENTS LISTENERS
@@ -67,10 +53,6 @@ form.addEventListener('submit', createLink)
 input.addEventListener('focus', hideOutput)
 input.addEventListener('input', sanitizeInput)
 clipboard.addEventListener('click', pasteData)
-contact.addEventListener('click', readContact)
 
 // --- BUSINESS RULES
 input.maxLength = maxAllowedLength()
-
-if (!window.ContactManager)
-    contact_container.classList.add('is-hidden')
