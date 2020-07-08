@@ -4,35 +4,41 @@ const rules = {
 }
 
 // --- SCOPE
-var form = document.querySelector('#form'),
-    input = document.querySelector('#input'),
-    clipboard = document.querySelector('#clipboard')
+var form = document.getElementById('form'),
+    input = document.getElementById('input'),
+    clipboard = document.getElementById('clipboard')
 
 // --- METHODS
 const maxAllowedLength = () =>
-    rules.allowedLengths[rules.allowedLengths.length - 1]
+    Math.max.apply(null, rules.allowedLengths)
+
+const minAllowedLength = () =>
+    Math.min.apply(null, rules.allowedLengths)
 
 const hasAllowedLength = t =>
     rules.allowedLengths.includes(t.length)
 
 const sanitizeInput = e =>
-    input.value = (e.target != undefined ? e.target.value : e)
+    input.value = (e.target ? e.target.value : e)
         .replace(/\D/g, '')
         .substr(0, maxAllowedLength())
 
 const hideOutput = () =>
     output.classList.add('is-hidden')
 
-const showOutput = t => {
+const showOutput = () =>
     output.classList.remove('is-hidden')
-    output.innerHTML = hasValidLength(t)
+
+const outputMessage = t => {
+    output.innerHTML = hasAllowedLength(t)
         ? `<a href="https://wa.me/${t}" class="is-link">Message +${t}</a>`
         : `<strong>${t}</strong> isn't a valid number`
 }
 
 const createLink = e => {
     e.preventDefault()
-    showOutput(input.value)
+    showOutput()
+    outputMessage(input.value)
 }
 
 const pasteData = async e => {
@@ -55,4 +61,7 @@ input.addEventListener('input', sanitizeInput)
 clipboard.addEventListener('click', pasteData)
 
 // --- BUSINESS RULES
+input.minLength = minAllowedLength()
 input.maxLength = maxAllowedLength()
+input.pattern = `[0-9]\{${input.minLength},${input.maxLength}\}`
+input.title = `Input required between ${input.minLength} and ${input.maxLength} chars`
